@@ -10,6 +10,13 @@ class Product extends Model {}
 Product.init(
   {
     // define columns
+    Tag.belongsToMany(Product, {
+      through: {
+        model: ProductTag,
+        unique: false
+      },
+      as: 'products_with_tag'
+    })
   },
   {
     sequelize,
