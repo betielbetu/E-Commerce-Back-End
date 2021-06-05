@@ -5,12 +5,35 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // get all products
 router.get('/', (req, res) => {
+  Product.findAll()
+  .then(products => {
+    res.status(200).send(products);
+  })
+  .catch(err => {
+    res.status(500).send(err.message);
+  });
   // find all products
   // be sure to include its associated Category and Tag data
 });
 
 // get one product
 router.get('/:id', (req, res) => {
+  const errors = [];
+  if (!req.params.id){
+    errors.push('Missing product id');
+  }
+  if (errors.length > 0){
+    res.status(500).send({message: errors.join('\n')});
+    return;
+  }
+  
+  Product.findByPk(req.params.id)
+  .then(product => {
+    res.status(200).send(product);
+  })
+  .catch(err => {
+    res.status(500).send({message: err.message});
+  })
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
 });
@@ -90,6 +113,25 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
+  const errors = [];
+  if (!req.params.id){
+    errors.push('Missing product id');
+  }
+  if (errors.length > 0){
+    res.status(500).send({message: errors.join('\n')});
+    return;
+  }
+  
+  Product.findByPk(req.params.id)
+  .then(product => {
+    product.destroy()
+    .then(() => {
+      res.status(200).send('Deleted product');l
+    })
+  })
+  .catch(err => {
+    res.status(500).send({message: err.message});
+  })
   // delete one product by its `id` value
 });
 
