@@ -5,7 +5,7 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // get all products
 router.get('/', (req, res) => {
-  Product.findAll()
+  Product.findAll({include: {all: true}})
   .then(products => {
     res.status(200).send(products);
   })
@@ -27,7 +27,7 @@ router.get('/:id', (req, res) => {
     return;
   }
   
-  Product.findByPk(req.params.id)
+  Product.findByPk(req.params.id, {include: {all: true}})
   .then(product => {
     res.status(200).send(product);
   })
